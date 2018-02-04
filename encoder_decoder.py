@@ -78,7 +78,7 @@ autoencoder = Model(input_img, decoded)
 #autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 autoencoder.compile(loss='mean_squared_error', optimizer=rms)
 autoencoder.summary()
-
+exit()
 original_matrix=[]
 transformed_matrix=[]
 

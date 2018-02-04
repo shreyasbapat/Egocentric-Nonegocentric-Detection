@@ -1,0 +1,3 @@
+/media/jyoti/data/Ego_class_Exp/optical_flow/build/CMakeFiles/edit_cache.dir
+/media/jyoti/data/Ego_class_Exp/optical_flow/build/CMakeFiles/rebuild_cache.dir
+/media/jyoti/data/Ego_class_Exp/optical_flow/build/CMakeFiles/OF.dir

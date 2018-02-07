@@ -8,7 +8,7 @@ from keras.layers import Input, Dense , merge
 from keras.layers.core import Reshape
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
-from keras.layers.convolutional import Conv2D,MaxPooling2D,UpSampling2D
+from keras.layers.convolutional import Convolution2D,MaxPooling2D,UpSampling2D
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adadelta, RMSprop
 import os

@@ -49,9 +49,9 @@ conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv3)
 conv4 = BatchNormalization()(conv4)
 conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv4)
 conv4 = BatchNormalization()(conv4)
-#enco = MaxPooling2D(pool_size=(2, 2))(enco)
+conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
     
-#enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
+#enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)z
 #enco = BatchNormalization()(enco)
 #enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
 #enco = BatchNormalization()(enco)

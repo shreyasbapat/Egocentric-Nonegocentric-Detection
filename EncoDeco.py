@@ -4,7 +4,7 @@
 # In[ ]:
 
 
-from keras.layers import Input, Dense
+from keras.layers import Input, Dense, merge
 from keras.layers.core import Reshape
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
@@ -48,7 +48,7 @@ conv3 = MaxPooling2D(pool_size=(2, 2))(conv3)
 conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv3)
 conv4 = BatchNormalization()(conv4)
 conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv4)
-enco = BatchNormalization()(conv4)
+conv4 = BatchNormalization()(conv4)
 #enco = MaxPooling2D(pool_size=(2, 2))(enco)
     
 #enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
@@ -66,23 +66,23 @@ enco = BatchNormalization()(conv4)
 #deco = Conv2D(128, (3, 3), activation='relu', padding='same')(deco)
 #deco = BatchNormalization()(deco)
 
-up5 = UpSampling2D((2,2))(enco)
-up5 = merge([up5, conv4], mode='concat', concat_axis=3)
+up5 = UpSampling2D((2,2))(conv4)
 up5 = Conv2D(64, (3, 3), activation='relu', padding='same')(up5)
+up5 = merge([up5, conv3], mode='concat', concat_axis=3)
 up5 = BatchNormalization()(up5)
 up5 = Conv2D(64, (3, 3), activation='relu', padding='same')(up5)
 up5 = BatchNormalization()(up5)
 
 up6 = UpSampling2D((2,2))(up5)
-up6 = merge([up6, conv3],mode = 'concat', concat_axis=3)
 up6 = Conv2D(32, (3, 3), activation='relu', padding='same')(up6)
+up6 = merge([up6, conv2],mode = 'concat', concat_axis=3)
 up6 = BatchNormalization()(up6)
 up6 = Conv2D(32, (3, 3), activation='relu', padding='same')(up6)
 up6 = BatchNormalization()(up6)
    
 up7 = UpSampling2D((2,2))(up6)
-up7 = merge([up7, conv2],mode = 'concat', concat_axis=3)
 up7 = Conv2D(16, (3, 3), activation='relu', padding='same')(up7)
+up7 = merge([up7, conv1],mode = 'concat', concat_axis=3)
 up7 = BatchNormalization()(up7)
 up7 = Conv2D(16, (3, 3), activation='relu', padding='same')(up7)
 up7 = BatchNormalization()(up7)
@@ -174,7 +174,7 @@ CheckDir = 'sample/'
 # In[ ]:
 
 
-for epoch in range(1,300):
+for epoch in range(1,100):
     
     train_X,train_Y=shuffle(x_train,y_train)
     print ("Epoch is: %d\n" % epoch)
@@ -188,7 +188,7 @@ for epoch in range(1,300):
         loss=autoencoder.train_on_batch(batch_train_X,batch_train_Y)
         print ('epoch_num: %d batch_num: %d loss: %f\n' % (epoch,batch,loss))
 
-    autoencoder.save_weights("fabric_autoen_final_500.h5")
+    autoencoder.save_weights("First_Encoder.h5")
     #encoder.save_weights("Only_Encoder_500.h5")
     if(epoch%5==0):
         x_test,y_test=shuffle(x_test,y_test)

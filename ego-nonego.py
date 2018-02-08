@@ -8,7 +8,7 @@ from keras.layers import Input, Dense , merge
 from keras.layers.core import Reshape
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
-from keras.layers.convolutional import Conv2D,MaxPooling2D,UpSampling2D
+from keras.layers.convolutional import Convolution2D,MaxPooling2D,UpSampling2D
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adadelta, RMSprop
 import os
@@ -42,29 +42,13 @@ def comp(a,b):
 input_img = Input(shape=(240,320,9))  # adapt this if using `channels_first` image data format
 x = Convolution2D(64, (3, 3), activation='relu', padding='same')(input_img)  # 160x180x16
 x=BatchNormalization()(x)
-x = Convolution2D(64, (3, 3), activation='relu', padding='same')(input_img)  # 160x180x16
-x=BatchNormalization()(x)
-x = Convolution2D(64, (3, 3), activation='relu', padding='same')(input_img)  # 160x180x16
-x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x) # 80x90x16
-x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)  
-x=BatchNormalization()(x)
-x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)  
-x=BatchNormalization()(x)
 x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)  
 x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x)   # 40x45x8
 x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x) 
 x=BatchNormalization()(x)
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x) 
-x=BatchNormalization()(x)
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x) 
-x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x)  #20x23x8
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
 x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 encoded = MaxPooling2D((2, 2), padding='same',name='encoded')(x) 
@@ -76,29 +60,13 @@ encoded = MaxPooling2D((2, 2), padding='same',name='encoded')(x)
 x=UpSampling2D((2,2))(encoded)
 x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
 x = UpSampling2D((2, 2))(x)
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
 x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 x=UpSampling2D((2,2))(x)
 x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
-x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
 x = UpSampling2D((2, 2))(x)
-x = Convolution2D(64, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = Convolution2D(64, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
 x = Convolution2D(64, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 decoded = Convolution2D(9, (3, 3), activation='sigmoid', padding='same')(x)
@@ -125,7 +93,7 @@ transformed_matrix=[]
 
 for k in range(1,2):
     path_major='Data/'+str(k)
-    for j in range(1,3):
+    for j in range(1,3000):
         im=array(Image.open(path_major+"/"+str(j)+".jpg"))
         img=im
         new=np.zeros([img.shape[0],img.shape[1],9])
@@ -146,7 +114,7 @@ for k in range(1,2):
            new[:,:,ii+i+1]+=grady
            i+=1
         original_matrix.append(new)
-    for j in range(1,3):
+    for j in range(1,3000):
         im=array(Image.open(path_major+"/"+str(j)+"_OF.jpg"))
         img=im
         new=np.zeros([img.shape[0],img.shape[1],9])
@@ -174,7 +142,7 @@ print('Images are loaded')
 
 
 data,Label = shuffle(original_matrix,transformed_matrix, random_state=2)
-X_train,X_test,Y_train,Y_test=train_test_split(data, Label, test_size=0.5, random_state=2)
+X_train,X_test,Y_train,Y_test=train_test_split(data, Label, test_size=0.25, random_state=2)
 X_train=array(X_train)
 Y_train=array(Y_train)
 X_test=array(X_test)
@@ -195,7 +163,7 @@ print('Testset-' + str(x_test.shape[0]))
 # In[112]:
 
 
-for epoch in range(1):
+for epoch in range(100):
 						train_X,train_Y=shuffle(x_train,y_train)
 						print ("Epoch is: %d\n" % epoch)
 						batch_size=64
@@ -206,7 +174,7 @@ for epoch in range(1):
 							batch_train_Y=train_Y[batch*batch_size:min((batch+1)*batch_size,len(train_Y))]
 							loss=network.train_on_batch(batch_train_X,batch_train_Y)
 							print ('epoch_num: %d batch_num: %d train loss: %f\n' % (epoch,batch,loss))
-						network.save_weights("model_encoder_withbatchnorm_deep_tt12.h5")
+						network.save_weights("optical_flow.h5")
 						if(epoch%1==0):
 							x_test,y_test=shuffle(x_test,y_test)
 							for batch in range(num_batches):

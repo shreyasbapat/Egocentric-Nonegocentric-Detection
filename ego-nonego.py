@@ -40,16 +40,16 @@ def comp(a,b):
 
 
 input_img = Input(shape=(240,320,9))  # adapt this if using `channels_first` image data format
-x = Convolution2D(64, (3, 3), activation='relu', padding='same')(input_img)  # 160x180x16
+x = Convolution2D(16, (3, 3), activation='relu', padding='same')(input_img)  # 160x180x16
 x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x) # 80x90x16
-x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)  
+x = Convolution2D(32, (3, 3), activation='relu', padding='same')(x)  
 x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x)   # 40x45x8
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x) 
+x = Convolution2D(64, (3, 3), activation='relu', padding='same')(x) 
 x=BatchNormalization()(x)
 x = MaxPooling2D((2, 2), padding='same')(x)  #20x23x8
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
+x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 encoded = MaxPooling2D((2, 2), padding='same',name='encoded')(x) 
 
@@ -58,16 +58,16 @@ encoded = MaxPooling2D((2, 2), padding='same',name='encoded')(x)
 
 
 x=UpSampling2D((2,2))(encoded)
-x = Convolution2D(512, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x = UpSampling2D((2, 2))(x)
-x = Convolution2D(256, (3, 3), activation='relu', padding='same')(x)
-x=BatchNormalization()(x)
-x=UpSampling2D((2,2))(x)
 x = Convolution2D(128, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 x = UpSampling2D((2, 2))(x)
 x = Convolution2D(64, (3, 3), activation='relu', padding='same')(x)
+x=BatchNormalization()(x)
+x=UpSampling2D((2,2))(x)
+x = Convolution2D(32, (3, 3), activation='relu', padding='same')(x)
+x=BatchNormalization()(x)
+x = UpSampling2D((2, 2))(x)
+x = Convolution2D(16, (3, 3), activation='relu', padding='same')(x)
 x=BatchNormalization()(x)
 decoded = Convolution2D(9, (3, 3), activation='sigmoid', padding='same')(x)
 network=Model(input_img,decoded)
@@ -91,7 +91,7 @@ transformed_matrix=[]
 # In[101]:
 
 
-for k in range(1,2):
+for k in range(1,3):
     path_major='Data/'+str(k)
     for j in range(1,3000):
         im=array(Image.open(path_major+"/"+str(j)+".jpg"))
@@ -163,7 +163,7 @@ print('Testset-' + str(x_test.shape[0]))
 # In[112]:
 
 
-for epoch in range(100):
+for epoch in range(300):
 						train_X,train_Y=shuffle(x_train,y_train)
 						print ("Epoch is: %d\n" % epoch)
 						batch_size=64

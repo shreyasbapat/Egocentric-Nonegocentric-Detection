@@ -31,25 +31,25 @@ conv1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
 conv1 = BatchNormalization()(conv1)
 conv1 = Conv2D(16, (3, 3), activation='relu', padding='same')(conv1)
 conv1 = BatchNormalization()(conv1)
-conv1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
    
-conv2 = Conv2D(32, (3, 3), activation='relu', padding='same')(conv1)
+conv2 = Conv2D(32, (3, 3), activation='relu', padding='same')(pool1)
 conv2 = BatchNormalization()(conv2)
 conv2 = Conv2D(32, (3, 3), activation='relu', padding='same')(conv2)
 conv2 = BatchNormalization()(conv2)
-conv2 = MaxPooling2D(pool_size=(2, 2))(conv2)
+pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
       
-conv3 = Conv2D(64, (3, 3), activation='relu', padding='same')(conv2)
+conv3 = Conv2D(64, (3, 3), activation='relu', padding='same')(pool2)
 conv3 = BatchNormalization()(conv3)
 conv3 = Conv2D(64, (3, 3), activation='relu', padding='same')(conv3)
 conv3 = BatchNormalization()(conv3)
-conv3 = MaxPooling2D(pool_size=(2, 2))(conv3)
+pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
     
-conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv3)
+conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(pool3)
 conv4 = BatchNormalization()(conv4)
 conv4 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv4)
 conv4 = BatchNormalization()(conv4)
-conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
+#conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
     
 #enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)z
 #enco = BatchNormalization()(enco)
@@ -67,22 +67,22 @@ conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
 #deco = BatchNormalization()(deco)
 
 up5 = UpSampling2D((2,2))(conv4)
-up5 = Conv2D(64, (3, 3), activation='relu', padding='same')(up5)
 up5 = merge([up5, conv3], mode='concat', concat_axis=3)
+up5 = Conv2D(64, (3, 3), activation='relu', padding='same')(up5)
 up5 = BatchNormalization()(up5)
 up5 = Conv2D(64, (3, 3), activation='relu', padding='same')(up5)
 up5 = BatchNormalization()(up5)
 
 up6 = UpSampling2D((2,2))(up5)
-up6 = Conv2D(32, (3, 3), activation='relu', padding='same')(up6)
 up6 = merge([up6, conv2],mode = 'concat', concat_axis=3)
+up6 = Conv2D(32, (3, 3), activation='relu', padding='same')(up6)
 up6 = BatchNormalization()(up6)
 up6 = Conv2D(32, (3, 3), activation='relu', padding='same')(up6)
 up6 = BatchNormalization()(up6)
    
 up7 = UpSampling2D((2,2))(up6)
-up7 = Conv2D(16, (3, 3), activation='relu', padding='same')(up7)
 up7 = merge([up7, conv1],mode = 'concat', concat_axis=3)
+up7 = Conv2D(16, (3, 3), activation='relu', padding='same')(up7)
 up7 = BatchNormalization()(up7)
 up7 = Conv2D(16, (3, 3), activation='relu', padding='same')(up7)
 up7 = BatchNormalization()(up7)
@@ -124,7 +124,7 @@ path1="Data"
 # In[ ]:
 
 
-for i in range(1,2):
+for i in range(1,3):
     path_major=path1+'/'+str(i)
     for j in range(1,2500):
         img=array(Image.open(path_major+"/"+str(j)+".jpg"))
@@ -174,7 +174,7 @@ CheckDir = 'sample/'
 # In[ ]:
 
 
-for epoch in range(1,100):
+for epoch in range(1,300):
     
     train_X,train_Y=shuffle(x_train,y_train)
     print ("Epoch is: %d\n" % epoch)
@@ -188,7 +188,7 @@ for epoch in range(1,100):
         loss=autoencoder.train_on_batch(batch_train_X,batch_train_Y)
         print ('epoch_num: %d batch_num: %d loss: %f\n' % (epoch,batch,loss))
 
-    autoencoder.save_weights("First_Encoder.h5")
+    autoencoder.save_weights("First_Encoder_300Epo.h5")
     #encoder.save_weights("Only_Encoder_500.h5")
     if(epoch%5==0):
         x_test,y_test=shuffle(x_test,y_test)

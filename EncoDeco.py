@@ -21,6 +21,7 @@ from sklearn.utils import shuffle
 from sklearn.cross_validation import train_test_split
 import scipy.misc
 import cv2
+import glob
 
 
 # In[ ]:
@@ -118,8 +119,8 @@ tobe_mat=[]
 # In[ ]:
 
 
-path1="Data"
-
+path1="Ego_Data"
+path2="Non_Ego_Data"
 
 # In[ ]:
 
@@ -141,21 +142,38 @@ for i in range(1,2):
         
 for i in range(2,3):
     path_major=path1+'/'+str(i)
-    for j in range(1,5000):
+    for j in range(1,2500):
         img=array(Image.open(path_major+"/"+str(j)+".jpg"))
         #print shape(img)
         #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
         #img=img.reshape(128,128,1)
         basic_mat.append(img)
-    for j in range(1,5000):
+    for j in range(1,2500):
         img=array(Image.open(path_major+"/"+str(j)+"_OF.jpg"))
+        #print shape(img)
+        #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
+        #img=img.reshape(128,128,1)
+        tobe_mat.append(img)
+        
+for i in range(1,54):
+    
+    os.chdir(path2)
+    path_major=str(i)
+    for j in range(len(glob.glob("*"))-1):
+        img=array(Image.open(path_major+"/"+str(j+1)+".jpg"))
+        #print shape(img)
+        #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
+        #img=img.reshape(128,128,1)
+        basic_mat.append(img)
+    for j in range(len(glob.glob("*"))-1):
+        img=array(Image.open(path_major+"/"+str(j+1)+"_OF.jpg"))
         #print shape(img)
         #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
         #img=img.reshape(128,128,1)
         tobe_mat.append(img)
 
 
-
+print ("Images Loaded")
 # In[ ]:
 
 

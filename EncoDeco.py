@@ -124,7 +124,7 @@ path1="Data"
 # In[ ]:
 
 
-for i in range(1,3):
+for i in range(1,2):
     path_major=path1+'/'+str(i)
     for j in range(1,2500):
         img=array(Image.open(path_major+"/"+str(j)+".jpg"))
@@ -138,6 +138,22 @@ for i in range(1,3):
         #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
         #img=img.reshape(128,128,1)
         tobe_mat.append(img)
+        
+for i in range(2,3):
+    path_major=path1+'/'+str(i)
+    for j in range(1,5000):
+        img=array(Image.open(path_major+"/"+str(j)+".jpg"))
+        #print shape(img)
+        #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
+        #img=img.reshape(128,128,1)
+        basic_mat.append(img)
+    for j in range(1,5000):
+        img=array(Image.open(path_major+"/"+str(j)+"_OF.jpg"))
+        #print shape(img)
+        #img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
+        #img=img.reshape(128,128,1)
+        tobe_mat.append(img)
+
 
 
 # In[ ]:
@@ -174,7 +190,7 @@ CheckDir = 'sample/'
 # In[ ]:
 
 
-for epoch in range(1,300):
+for epoch in range(1,500):
     
     train_X,train_Y=shuffle(x_train,y_train)
     print ("Epoch is: %d\n" % epoch)
@@ -188,7 +204,7 @@ for epoch in range(1,300):
         loss=autoencoder.train_on_batch(batch_train_X,batch_train_Y)
         print ('epoch_num: %d batch_num: %d loss: %f\n' % (epoch,batch,loss))
 
-    autoencoder.save_weights("First_Encoder_300Epo.h5")
+    autoencoder.save_weights("First_Encoder_500Epo.h5")
     #encoder.save_weights("Only_Encoder_500.h5")
     if(epoch%5==0):
         x_test,y_test=shuffle(x_test,y_test)

@@ -78,9 +78,9 @@ transformed_matrix=[]
 # In[101]:
 
 
-for k in range(1,2):
+for k in range(2,3):
     path_major='Data/'+str(k)
-    for j in range(1,100):
+    for j in range(6500,6700):
 	im=array(Image.open(path_major+"/"+str(j)+".jpg"))
 	img=im
 	new=np.zeros([img.shape[0],img.shape[1],9])
@@ -101,7 +101,7 @@ for k in range(1,2):
 	   new[:,:,ii+i+1]+=grady
 	   i+=1
 	original_matrix.append(new)
-    for j in range(1,100):
+    for j in range(6500,6700):
 	im=array(Image.open(path_major+"/"+str(j)+"_OF.jpg"))
 	img=im
 	new=np.zeros([img.shape[0],img.shape[1],9])
